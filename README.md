@@ -1,6 +1,7 @@
 # TuniMetricsCompetition
 
 (proposed repo structure)
+```
 ├── CAD_Models
 │   ├── .stl files
 │   └── .ply files
@@ -15,5 +16,5 @@
     ├── segmentation
     ├── pose estimation
     └── grasp detection
-
+```
 
