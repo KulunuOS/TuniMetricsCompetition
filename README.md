@@ -1,4 +1,4 @@
-# TuniMetricsCompetition
+# Tuni Metrics Competition
 
 (proposed repo structure)
 ```
