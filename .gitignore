@@ -1,1 +1,2 @@
 cobot_controllers/resources*
+Vision_tools/faster_rcnn_detector/env/*
