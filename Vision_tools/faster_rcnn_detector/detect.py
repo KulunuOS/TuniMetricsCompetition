@@ -9,7 +9,7 @@ Created on Mon Jan 24 16:41:38 2022
 import detectron2
 import cv2
 import os
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+#os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 import json_submitter
 
 from detectron2.utils.logger import setup_logger

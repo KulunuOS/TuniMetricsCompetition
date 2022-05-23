@@ -10,8 +10,8 @@ click==8.0.1
 cloudpickle==2.0.0
 cycler==0.10.0
 Cython==0.29.24
-dataclasses==0.8
-detectron2==0.5+cu111
+dataclasses
+detectron2
 future==0.18.2
 fvcore==0.1.5.post20210924
 google-auth==1.35.0
