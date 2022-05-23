@@ -40,7 +40,7 @@ def main(argv):
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 3
     ##
 
-    cfg.MODEL.WEIGHTS = 'alpha_noise_physics_half.pth'
+    cfg.MODEL.WEIGHTS = 'models/alpha_noise_physics_half.pth'
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.4   # set a testing threshold
     predictor = DefaultPredictor(cfg)
     
