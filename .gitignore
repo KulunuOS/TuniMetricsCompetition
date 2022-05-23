@@ -1,2 +1,4 @@
 Manipulation/cobot_controllers/resources/*
 Vision_tools/faster_rcnn_detector/env/*
+Vision_tools/faster_rcnn_detector/models/*
+****__pycache__
