@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<launch>
+
+  <!-- Launch realsense ros wrapper -->
+
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+        <arg name="align_depth" value="true" />
+        <arg name="color_width" value="1280" />
+        <arg name="color_height" value="720" />
+        <arg name="color_fps" value="30" />	
+        
+        <arg name="depth_width" value="1280" />
+        <arg name="depth_height" value="720" />
+        <arg name="depth_fps" value="30" />	
+        
+        <arg name="filters" value="pointcloud" /> 
+    </include>
+    
+
+    <!-- Launch vision scripts -->
+
+  <node name="metrics_vision" type="grasp_pose_detection.py" pkg="metrics_vision" output="screen" />
+
+
+
+</launch>

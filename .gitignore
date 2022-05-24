@@ -1,3 +1,4 @@
 faster_rcnn_detector/env/*
 faster_rcnn_detector/models/*
+metrics_vision/models/
 ****__pycache__
