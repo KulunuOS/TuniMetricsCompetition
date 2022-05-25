@@ -18,7 +18,11 @@
     </include>
     
 
-    <!-- Launch vision scripts -->
+  <!-- Camera calibration -->
+
+  <include file="$(find metrics_vision)/launch/camera_calibration.launch"/>
+  
+  <!-- Launch vision scripts -->
 
   <node name="metrics_vision" type="grasp_pose_detection.py" pkg="metrics_vision" output="screen" />
 
