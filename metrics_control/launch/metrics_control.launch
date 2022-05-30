@@ -12,6 +12,7 @@
     <arg name="load_gripper" value="$(arg load_gripper)" />
   </include>
 
+
   <!-- Launch moveIt scripts -->
 
   <include file="$(find cobot_controllers)/launch/moveit_control.launch" >
