@@ -26,7 +26,7 @@
   
   <!-- Launch vision scripts -->
 
-  <node name="metrics_vision" type="grasp_pose_detection.py" pkg="metrics_vision" output="screen" />
+  <node name="metrics_vision" type="object_detection.py" pkg="metrics_vision" output="screen" />
 
 
 

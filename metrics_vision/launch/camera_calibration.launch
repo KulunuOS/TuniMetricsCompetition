@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-
-<launch>
-
- <node pkg="tf2_ros" type="static_transform_publisher" name="camera_link_broadcaster2"
-      args="0.264391 -0.317064 -9.58186 -0.0234475 0.0110475 0.488416 0.872226 panda_link8 camera_color_optical_frame" />
-
-</launch>

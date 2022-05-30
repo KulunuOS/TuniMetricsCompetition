@@ -19,8 +19,6 @@
   </include>
 
   <!-- Launch custom metrics scripts -->
-
   <node name="metrics_assembly" type="grasp_req_example.py" pkg="metrics_control" output="screen" />
-
 
 </launch>
