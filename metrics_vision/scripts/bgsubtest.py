@@ -26,14 +26,29 @@ class testBGSub():
 		    self.rgb_img = self.bridge.imgmsg_to_cv2(rgb_data, "bgr8")
 		except CvBridgeError as e:
 		    print(e)
-		fgMask = self.backSub.apply(self.rgb_img,learningRate = self.lr)
+		blur = cv2.blur(self.rgb_img,(9,9))
+		fgMask = self.backSub.apply(blur,learningRate = self.lr)
 		keyboard = cv2.waitKey(10)
 		if keyboard == ord('s'):
 			print('change lr')
 			self.lr = 0
 			self.trained = True
+		fgMask[fgMask != 255] = 0
 
-		cv2.imshow("mask", fgMask)
+		if self.lr == -1:
+			self.bg = blur
+		if self.lr == 0:
+			t1 = np.float32(np.mean(self.bg,-1))
+			t2 = np.float32(np.mean(blur,-1))
+			tmp = np.abs(t1-t2)
+			tmp = tmp>50
+			fgMask = np.uint8(tmp)*255
+		contours, hierarchy = cv2.findContours(fgMask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+		area = np.array([cv2.contourArea(cnt) for cnt in contours])
+		contours = [contours[i] for i in range(len(contours)) if area[i] > 50]
+		print(len(contours))
+		cv2.drawContours(self.rgb_img, contours, -1, (0,255,0), 3)
+		cv2.imshow("mask", self.rgb_img)
 		cv2.waitKey(10)
 		if keyboard == ord('q'):			
 			cv2.destroyAllWindows()
