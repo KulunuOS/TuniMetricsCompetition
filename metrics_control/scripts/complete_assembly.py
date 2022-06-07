@@ -2,69 +2,76 @@
 
 import time
 import rospy
+from cobot_msgs.msg import *
 from cobot_msgs.srv import *
-from sensor_msgs.msg import JointState
 
 
 
 def main():
-	gear_pose = [0.8314000340148536, 0.17001376770738894, 0.07777910043046214, -2.6012946816457427, -0.060050653517849904, 2.7874877791669634, 0.19530744828946062]
-	backplate_approach_pose = [0.6813842747504251, 0.3863561676158779, -0.15252376738556644, -1.7943590762326294, 0.06897386904405396, 2.1883793025301634, -0.24329813243779871]
-	backplate_pose = [0.591584522849635, 0.5963525362851327, -0.058518272329753186, -1.8352778794695759, 0.11483129848374259, 2.4540278837150997, -0.36387774687839874]
-	backplate_insertion_pose = [0.5912686642429285, 0.6188222601165857, -0.05933526095776822, -1.829300385807981, 0.11483864723973802, 2.4606658658475284, -0.3639797757251395]
-	top_plate_pose = [0.25216918792471477, 0.44560220148394525, 0.3697916431690843, -2.2037668119731704, -0.21863222708966998, 2.655778267092175, -0.001763459224771294]
 
-	pub = rospy.Publisher('/new_joint_target', JointState, queue_size=10)
 
-	rospy.wait_for_service('grasp')
-	grasping_srv = rospy.ServiceProxy('grasp', Grasp)
-	rospy.wait_for_service('move_gripper')
-	release_gripper = rospy.ServiceProxy("move_gripper", MoveGripper)
+	detection_client = rospy.ServiceProxy('/detect_grasp_pose', GraspPoseDetection)
+	
+	rotate_ee_service = rospy.ServiceProxy("/rotate_ee", RotateEE)
+	cartesian_action_service_2D = rospy.ServiceProxy('/take_2D_cartesian_action', Take2DCartesianAction)
+	cartesian_action_service_1D = rospy.ServiceProxy('/take_1D_cartesian_action', Take1DCartesianAction)
+	move_gripper_service = rospy.ServiceProxy("move_gripper", MoveGripper)
 
-	time.sleep(5)
-	# Pick up the gear 
-	msg = JointState()
-	msg.position = gear_pose
-	print(msg)
-	pub.publish(msg)
-	time.sleep(3)
+	grasping_service = rospy.ServiceProxy("grasp", Grasp)
 
-	grasping_srv(0.046, 70)
-	# Bring them above the back plate
-	msg = JointState()
-	msg.position = backplate_approach_pose
-	print(msg)
-	pub.publish(msg)
-	time.sleep(3)
-	# insert the gears 
-	msg = JointState()
-	msg.position = backplate_pose
-	print(msg)
-	pub.publish(msg)
-	time.sleep(3)
+	def grasp(x, y):
+		cartesian_action_service_2D(pose=[x, y])
+		time.sleep(3)
+		#rotate_ee_service(angle=detection.quaternion)
+		time.sleep(3)
+		cartesian_action_service_1D(z_pose=0.205)
 
-	release_gripper(20.0, 0.8)
-	# Come back above the back plate 
-	msg = JointState()
-	msg.position = backplate_approach_pose
-	print(msg)
-	pub.publish(msg)
-	time.sleep(3)	
-	# Pick up the top plate 
-	msg = JointState()
-	msg.position = top_plate_pose
-	print(msg)
-	pub.publish(msg)
-	time.sleep(3)
-	# Bring it above the back plate 
-	msg = JointState()
-	msg.position = backplate_insertion_pose
-	print(msg)
-	pub.publish(msg)
-	time.sleep(3)
+		# grasping_service(width=0.048, force=20.0)
+		grasping_service(width=0.05, force=20.0)
+		time.sleep(3)
+		cartesian_action_service_1D(z_pose=0.40)
+
+	# Make sure the gripper is working properly
+	try:
+		move_gripper_service(20.0, 0.02) 
+		move_gripper_service(20.0, 0.08) 
+	except rospy.ServiceException as exc:
+		print("Gripper not operational")
+	else:
+
+ 		#####################################################################
+		#						Beginning of the task 						#
+		#####################################################################
+
+		gear_detection = False
+		bottom_casing_detection = False
+
+		while not (gear_detection and bottom_casing_detection):
+			objects = detection_client()
+
+			for obj in objects.detection.detections:
+				if obj.obj_class == 8:
+					gear_detection = obj
+				if obj.obj_class != 8:
+					bottom_casing_detection = obj
+
+			print("No detection")
+			time.sleep(1)
+
+		grasp(gear_detection.x, gear_detection.y)
+
+		# Bring them above the back plate
+
+		cartesian_action_service_2D(pose=[bottom_casing_detection.x, bottom_casing_detection.y])
+		time.sleep(3)
+
+		# insert the gears 
+		cartesian_action_service_1D(z_pose=0.215)
+
+	
 
 if __name__ == '__main__':
 	rospy.init_node('metrics_assembly')
+	time.sleep(3)
 	main()
-
 	rospy.spin()

@@ -2,8 +2,8 @@
 
 <launch>
 
-  <arg name="robot_ip" />
-  <arg name="load_gripper" />
+  <arg name="robot_ip" default="172.16.0.2" />
+  <arg name="load_gripper" default="true" />
 
   <!-- Launch FCI ros wrapper -->
 

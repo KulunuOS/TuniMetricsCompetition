@@ -13,31 +13,38 @@ if __name__ == '__main__':
 
 	detection_client = rospy.ServiceProxy('/detect_grasp_pose', GraspPoseDetection)
 	
+	rotate_ee_service = rospy.ServiceProxy("/rotate_ee", RotateEE)
 	cartesian_action_service_2D = rospy.ServiceProxy('/take_2D_cartesian_action', Take2DCartesianAction)
 	cartesian_action_service_1D = rospy.ServiceProxy('/take_1D_cartesian_action', Take1DCartesianAction)
 	move_gripper_service = rospy.ServiceProxy("move_gripper", MoveGripper)
-	rotate_ee_service = rospy.ServiceProxy("/rotate_ee", RotateEE)
 
+	'''
 	grasping_service = rospy.ServiceProxy("grasp", Grasp)
 
 	move_gripper_service(20.0, 0.08) 
 
-	time.sleep(2)
+	object_id = input("Type class id of object to grasp")
 
 	objects = detection_client()
-	print("object_detected")
-	print(objects)
-	detection = objects.detection.detections[0]
-	print(detection)	
-	
-	cartesian_action_service_2D(pose=[detection.x, detection.x])
-	time.sleep(3)
-	rotate_ee_service(angle=detection.quaternion)
-	time.sleep(3)
-	cartesian_action_service_1D(z_pose=0.201)
 
-	grasping_service(width=0.003, force=20.0)
-	time.sleep(3)
-	cartesian_action_service_1D(z_pose=0.40)
+	for obj in objects.detection.detections:
+		print(obj.obj_class)
+		print(object_id)
+		if obj.obj_class == int(object_id):
+			detection = obj
 
+	if detection:
+		print(detection)	
+		
+		cartesian_action_service_2D(pose=[detection.x, detection.y])
+		time.sleep(3)
+		#rotate_ee_service(angle=detection.quaternion)
+		time.sleep(3)
+		cartesian_action_service_1D(z_pose=0.201)
+
+		grasping_service(width=0.003, force=20.0)
+		time.sleep(3)
+		cartesian_action_service_1D(z_pose=0.40)
+	'''
+	cartesian_action_service_2D(pose=[0.48, 0.00])
 	rospy.spin()
