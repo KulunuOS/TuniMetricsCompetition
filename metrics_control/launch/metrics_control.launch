@@ -19,9 +19,9 @@
     <arg name="load_gripper" value="$(arg load_gripper)" />
   </include>
 
-  <!-- Launch custom metrics scripts -->
+  <!-- Launch custom metrics scripts 
 
-  <node name="metrics_assembly" type="complete_assembly.py" pkg="metrics_control" output="screen" />
+  <node name="metrics_assembly" type="complete_assembly.py" pkg="metrics_control" output="screen" />-->
 
 
 </launch>
