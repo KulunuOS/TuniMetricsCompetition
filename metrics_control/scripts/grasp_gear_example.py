@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
 			while not detection:
 				for obj in objects.detection.detections:
-					if obj.obj_class == 1:
+					if obj.obj_class == 8 or obj.obj_class == 1:
 						detection = obj
 				print("Cannot see a gear. Trying again.")
 				time.sleep(1)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 			
 			cartesian_action_service_2D(pose=[detection.x, detection.y])
 			time.sleep(3)
-			#rotate_ee_service(angle=detection.quaternion)
+			rotate_ee_service(angle=detection.angle)
 			time.sleep(3)
 			cartesian_action_service_1D(z_pose=0.201)
 
