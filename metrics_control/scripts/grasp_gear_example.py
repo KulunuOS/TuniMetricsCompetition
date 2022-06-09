@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
 			while not detection:
 				for obj in objects.detection.detections:
-					if obj.obj_class == 8 or obj.obj_class == 1:
+					if obj.obj_class == 8:
 						detection = obj
 				print("Cannot see a gear. Trying again.")
 				time.sleep(1)
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 			time.sleep(3)
 			cartesian_action_service_1D(z_pose=0.201)
 
-			grasping_service(width=0.003, force=20.0)
+			grasping_service(width=0.0245, force=20.0)
 			time.sleep(3)
 			cartesian_action_service_1D(z_pose=0.40)
 		

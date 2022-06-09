@@ -57,17 +57,19 @@ if __name__ == '__main__':
 			move_gripper_service(20.0, 0.0)	
 				
 			if (obj1.y < obj2.y): # first object is on the right
-				cartesian_action_service_2D(pose=[obj1.x, obj1.y-0.05])
+				cartesian_action_service_2D(pose=[obj1.x, obj1.y-0.05], slow=False)
+				time.sleep(3)
+				rotate_ee_service(angle=0.0)
 				time.sleep(3)
 				cartesian_action_service_1D(z_pose=0.201)
 				time.sleep(3)
-				cartesian_action_service_2D(pose=[obj2.x, obj2.y+0.01])
+				cartesian_action_service_2D(pose=[obj2.x, obj2.y], slow=True)
 			elif (obj1.y > obj2.y):  # first object is on the left
-				cartesian_action_service_2D(pose=[obj1.x, obj1.y+0.05])
+				cartesian_action_service_2D(pose=[obj1.x, obj1.y+0.05], slow=False)
 				time.sleep(3)
 				cartesian_action_service_1D(z_pose=0.201)
 				time.sleep(3)
-				cartesian_action_service_2D(pose=[obj2.x, obj2.y-0.01])
+				cartesian_action_service_2D(pose=[obj2.x, obj2.y], slow=True)
 		
 		
 		rospy.spin()

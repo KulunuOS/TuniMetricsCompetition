@@ -1,4 +1,10 @@
+#!/usr/bin/env python3
+
+import time
 import rospy
+import math
+from cobot_msgs.msg import *
+from cobot_msgs.srv import *
 
 """
 This script assembles the top_casing on already assembled left_gear + right_gear + bottom_casing
@@ -9,50 +15,71 @@ There are two ways to assemble the top_casing
 (b) assembled_gears_in_hand() : Pick the semi_assembled gears + bottom casing and push it down on top_casing
 
 """
-def top_casing_in_hand(detection):
 
-    # 1. Pick top_casing
-    # reach the grasp pose
-    # close the gripper
-    
-    # 2. Assemble top_casing
-    # reach the assemble pose
-    # push down
-    # open gripper
-
-    return
-
-
-def assembled_gears_in_hand(detection):
-    
-    # 1. Pick semi assembled gears
-    # reach the grasp pose
-    # close the gripper
-    
-    # 2. Assemble on  top_casing
-    # reach the assemble pose
-    # push down
-    # open gripper
-    
-    return 
 
 if __name__ == '__main__':
+	try:
+		rospy.init_node('metrics_assembly2')
 
-    rospy.init_node('top_casing_assembly')
+		time.sleep(5)
 
-    # Initiate grasp_client and detection_client
+		detection_client = rospy.ServiceProxy('/detect_grasp_pose', GraspPoseDetection)
+		
+		rotate_ee_service = rospy.ServiceProxy("/rotate_ee", RotateEE)
+		cartesian_action_service_2D = rospy.ServiceProxy('/take_2D_cartesian_action', Take2DCartesianAction)
+		cartesian_action_service_1D = rospy.ServiceProxy('/take_1D_cartesian_action', Take1DCartesianAction)
+		move_gripper_service = rospy.ServiceProxy("move_gripper", MoveGripper)
+		
+		move_to_joint_target = rospy.ServiceProxy('/take_action', TakeAction)
+	
+		
+		grasping_service = rospy.ServiceProxy("grasp", Grasp)
 
-    # grasp_client = ?
-    # detection_client = ?
+		try:
+			move_gripper_service(20.0, 0.02) 
+			time.sleep(1)
+			move_gripper_service(20.0, 0.08) 
+		except rospy.ServiceException as exc:
+			print("Gripper not operational")
+		else:
 
-    # send the grasp pose detection request (get_poses) to detection client
-    object_pose_array = detection_client(get_poses)
-    detection =  # in the form of a pose_msg?
+			input("If the robot is in the start position type enter to grasp. Otherwise - rosrun metrics_control move_to_start.py")
 
-    top_casing_in_hand(detection)
-    #assembled_gears_in_hand(detection)
+			objects = detection_client()
+
+			# Looking for 2 detections
+			# 1. Detecting the inverted top casing inv
+			# 2. Detecting the assembled gears
+				
+			casing_detection = False 
+			bottom_detection = False 
+
+			while not (casing_detection and  bottom_detection):
+				for obj in objects.detection.detections:
+					if obj.obj_class == 7 :
+						print("Top casing inv found")
+						casing_detection = obj
+					elif obj.obj_class == 9:
+						bottom_detection = obj 					
+				print("Cannot locate the objects. Trying again.")
+				time.sleep(1)
 
 
-    rospy.spin()
+			#print(detection)
+			
+			#print("detections : " , detections)
+			print ('Picking the top casing')
 
+			cartesian_action_service_2D(pose=[casing_detection.x, casing_detection.y])
+			time.sleep(3)
+			rotate_ee_service(angle= casing_detection.angle)
+			time.sleep(3)
+			cartesian_action_service_1D(z_pose=0.201)
 
+			grasping_service(width=0.0043, force=20.0)
+			time.sleep(3)
+			cartesian_action_service_1D(z_pose=0.40)
+			
+
+	except rospy.ROSInterruptException:
+		pass

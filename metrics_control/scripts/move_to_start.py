@@ -21,7 +21,7 @@ if __name__ == '__main__':
 		req.q = ready_pose
 		move_to_joint_target(req)
 		time.sleep(2)
-		cartesian_action_service_2D(pose=[0.48, 0.00])		
+		cartesian_action_service_2D(pose=[0.48, 0.00], slow=False)		
 	
 	except rospy.ROSInterruptException:
 		pass

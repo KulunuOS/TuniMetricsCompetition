@@ -74,7 +74,7 @@ class ResnetStreamMonitor(ImageStreamMonitor):
 				x,y,w,h = cv2.boundingRect(prediction[1])
 				cv2.putText(rgb_image, prediction[0], (x,y+h+10), 
 		                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255))
-				cv2.putText(rgb_image, str(prediction[3]), (x,y+h+60), 
+				cv2.putText(rgb_image, str(np.degrees(prediction[3])), (x,y+h+60), 
 		                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,255))
 				cv2.drawContours(rgb_image, [prediction[1]], -1, (0,255,0), 3)
 				cv2.circle(rgb_image, (prediction[2][0], prediction[2][1]), 7, (255, 255, 255), -1)
