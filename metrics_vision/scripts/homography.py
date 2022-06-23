@@ -1,8 +1,24 @@
 import cv2
 import numpy as np
 
-pntsCam = np.array([[1516.0,746],[301, 765],[315, 205],[1288, 151],[991,613]])
-pntsTable = np.array([[0.4381,-0.1896],[0.4186, 0.2945],[0.6411, 0.2905],[0.6706, -0.0920],[0.4907, 0.0192]])
+pntsCam = np.array([[1429.0,  441.0],
+					[1090.0, 607.0],
+					[920.0, 360.0],
+					[602.0, 326.0],
+					[1148.0, 403.0], 
+					[549.0, 559.0 ],
+					[802.0, 548.0 ],
+					[754.0, 256.0 ]])
+
+pntsTable = np.array([[0.5561, 0.3529 ],
+					  [0.4875, -0.0136 ],
+					  [0.5819, 0.0535 ],
+					  [0.5924, 0.1751 ],
+					  [0.5740, -0.0415],
+					  [0.5083, 0.1907],
+					  [0.5159, 0.9196],
+					  [0.6290, 0.1107]])
+
 matrix, mask = cv2.findHomography(pntsCam, pntsTable)
 print(matrix)
 dst = cv2.perspectiveTransform(pntsCam.reshape(-1,1,2), matrix)
@@ -12,3 +28,7 @@ print(pntsTable.shape)
 diff = np.mean(np.abs(pntsTable-dst),axis=0)
 print('********')
 print(diff)
+
+
+
+

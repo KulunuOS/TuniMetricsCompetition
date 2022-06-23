@@ -40,6 +40,8 @@ def main():
 		print("Gripper not operational")
 	else:
 		global safety_on
+
+		global error 
  		#####################################################################
 		#						Beginning of the task 						#
 		#####################################################################
@@ -72,8 +74,10 @@ def main():
 			time.sleep(3)
 			rotate_ee_service(angle=0.0)
 			time.sleep(3)
+			safety_on = False
 			cartesian_action_service_1D(z_pose=0.3)
 			cartesian_action_service_1D(z_pose=0.201, slow=True)
+			safety_on = True
 			time.sleep(3)
 			# Push left
 			cartesian_action_service_2D(pose=[obj2.x, obj2.y-0.03], slow=True)
@@ -82,8 +86,10 @@ def main():
 			time.sleep(3)
 			rotate_ee_service(angle=0.0)
 			time.sleep(3)
+			safety_on = False
 			cartesian_action_service_1D(z_pose=0.3)
 			cartesian_action_service_1D(z_pose=0.201, slow=True)
+			safety_on = True
 			time.sleep(3)
 			# Push right
 			cartesian_action_service_2D(pose=[obj2.x, obj2.y+0.03], slow=True)
@@ -100,7 +106,7 @@ def main():
 		time.sleep(2)
 		cartesian_action_service_2D(pose=[0.48, 0.00], slow=False)
 		move_gripper_service(20.0, 0.08) 
-		time.sleep(5)
+		time.sleep(10)
 
 		##### BRING THEM OVER 
 		gear_detection = False
@@ -112,9 +118,8 @@ def main():
 			for obj in objects.detection.detections:
 				if obj.obj_class == 8:
 					gear_detection = obj
-				if obj.obj_class == 3:
+				if obj.obj_class == 3:  
 					bottom_casing_detection = obj
-
 			print("No detection")
 			time.sleep(1)
 
@@ -133,7 +138,7 @@ def main():
 
 		# Bring them above the back plate
 
-		cartesian_action_service_2D(pose=[bottom_casing_detection.x+0.005, bottom_casing_detection.y+0.005])
+		cartesian_action_service_2D(pose=[bottom_casing_detection.x, bottom_casing_detection.y])
 		time.sleep(3)
 		rotate_ee_service(angle=bottom_casing_detection.angle)
 		time.sleep(3)
@@ -146,7 +151,7 @@ def main():
 		safety_on = False
 		cartesian_action_service_1D(z_pose=0.30)
 		move_gripper_service(20.0, 0.0)	
-		cartesian_action_service_1D(z_pose=0.215, slow=True)
+		cartesian_action_service_1D(z_pose=0.210, slow=True)
 		cartesian_action_service_1D(z_pose=0.45)
 		move_gripper_service(20.0, 0.8)	
 		safety_on = True
@@ -156,7 +161,7 @@ def main():
 		#print("detections : " , detections)
 		print ('Picking the top casing')
 		
-		global error 
+
 		dontmoveon = True 
 		while(dontmoveon):
 			error = False 
@@ -206,11 +211,11 @@ def main():
 
 
 		print ('Moving on to top casing')
-		cartesian_action_service_2D(pose=[bottom_detection.x+0.004, bottom_detection.y+0.00385])
+		cartesian_action_service_2D(pose=[bottom_detection.x, bottom_detection.y -0.002])
 		time.sleep(3)
 		rotate_ee_service(angle= bottom_detection.angle)
 		time.sleep(3)
-		cartesian_action_service_1D(z_pose=0.21375, slow=True)
+		cartesian_action_service_1D(z_pose=0.214, slow=True)
 		move_gripper_service(20.0, 0.8)				
 
 
