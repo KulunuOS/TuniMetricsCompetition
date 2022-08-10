@@ -1,10 +1,10 @@
 # Tuni Metrics Competition
 
-The repository presents the task completed for a robotics competition - 1st ADAPT FIELD CAMPAIGN.
+The repository presents the task completed for a robotics competition - [1st ADAPT FIELD CAMPAIGN](https://metricsproject.eu/agile-production/1st-field-campaign/)
 
 Update:
 
-Our team from [Cognitive Robotics](https://research.tuni.fi/cogrob/) research group at Tampere university won the 2nd place at [1st ADAPT FIELD CAMPAIGN](https://metricsproject.eu/agile-production/1st-field-campaign/) for the Video track and the Open-source award for the competition
+Our team from [Cognitive Robotics](https://research.tuni.fi/cogrob/) research group at Tampere university won the 2nd place for the Video track and the Open-source award for the robotics competition
 
 
 ### Results
